@@ -1,9 +1,9 @@
 #!/usr/bin/groovy
-package com.REI-Systems.openshift
+package com.reisys.openshift
 
 
 def call(body) {
-	def utils = new com.REI-Systems.openshift.Utils();
+	def utils = new com.reisys.openshift.Utils();
 	def pipelineParams= [:]
 	body.resolveStrategy = Closure.DELEGATE_FIRST
 	body.delegate = pipelineParams

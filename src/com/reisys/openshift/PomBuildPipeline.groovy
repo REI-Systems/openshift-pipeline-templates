@@ -1,9 +1,9 @@
 #!/usr/bin/groovy
-package com.REI-Systems.openshift
+package com.reisys.openshift
 
 
 def call(body) {
-	def utils = new com.REI-Systems.openshift.Utils();
+	def utils = new com.reisys.openshift.Utils();
 	def pipelineParams= [:]
 	body.resolveStrategy = Closure.DELEGATE_FIRST
 	body.delegate = pipelineParams
@@ -12,9 +12,7 @@ def call(body) {
 	pipeline {
 		environment { RELEASE_NUMBER = ""; }
 		node {
-			checkout([$class           : 'GitSCM',
-				branches         : [[name: "*/${BRANCH_NAME}"]],
-				userRemoteConfigs: [[url: "${PS_GIT_URI}"]]]);
+			checkout scm;
 		}
 
 		def projectFolder;
@@ -33,15 +31,14 @@ def call(body) {
 			echo "utils.isFeature():utils.isRelease():utils.isDevelop():${env.RELEASE_NUMBER}"
 
 			if( utils.isFeature() || utils.isDevelop() || utils.isRelease()) {
-				node("maven") {
-					echo ">>> Before buildJava"
+				node('maven') {
 					utils.buildJava(projectFolder)
 					stash name: 'artifacts'
 				}
 			}
 
 			if(utils.isRelease() ||  utils.isDevelop()) {
-				node ("maven") {
+				node ('maven') {
 					unstash 'artifacts'
 					utils.deployJava(projectFolder)
 				}

@@ -1,4 +1,4 @@
-package com.REI-Systems.openshift
+package com.reisys.openshift
 
 class Globals {
 	static String imageBase = "quay.kee.reisystems.io"
